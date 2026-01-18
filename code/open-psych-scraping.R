@@ -120,29 +120,49 @@ get_stats("https://openpsychometrics.org/tests/characters/stats/DH/6/")
 
 #Create for loop to collect characeters for all shows ----
 df_characters<-data.frame()
-for(id in df_universe$id){
+total_universes <- length(df_universe$id)
+message(paste("Scraping characters from", total_universes, "universes..."))
+pb <- txtProgressBar(min = 0, max = total_universes, style = 3)
+
+for(i in seq_along(df_universe$id)){
+  id <- df_universe$id[i]
   temp_data_char <- get_characters(id)
   df_characters<-rbind(df_characters,temp_data_char)
+  setTxtProgressBar(pb, i)
 }
+close(pb)
 
 
 #Create for loop to collect stats for all characters
 df_stats<-data.frame()
-for(url in df_characters$link){
+total_chars <- length(df_characters$link)
+message(paste("Scraping stats for", total_chars, "characters..."))
+pb <- txtProgressBar(min = 0, max = total_chars, style = 3)
+
+for(i in seq_along(df_characters$link)){
+  url <- df_characters$link[i]
   temp_data_stats<-get_stats(url)
   temp_data_stats$char_id<-df_characters$id[df_characters$link==url]
   df_stats <-rbind(df_stats,temp_data_stats)
+  setTxtProgressBar(pb, i)
 }
+close(pb)
 
 
 
 #Create for loop to collect myers-briggs match scores
 df_myers_briggs<-data.frame()
-for(url in df_characters$link){
+message(paste("Scraping Myers-Briggs scores for", total_chars, "characters..."))
+pb <- txtProgressBar(min = 0, max = total_chars, style = 3)
+
+for(i in seq_along(df_characters$link)){
+  url <- df_characters$link[i]
   temp_data_mb<-get_mb(url)
   temp_data_mb$char_id<-df_characters$id[df_characters$link==url]
   df_myers_briggs <-rbind(df_myers_briggs,temp_data_mb)
+  setTxtProgressBar(pb, i)
 }
+close(pb)
 
 
 #clean up characters
