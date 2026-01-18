@@ -136,13 +136,12 @@ for(url in df_characters$link){
 
 
 
-#Create for loop to collect myers-briggs match scores
-df_myers_briggs<-data.frame()
-for(url in df_characters$link){
-  temp_data_mb<-get_mb(url)
-  temp_data_mb$char_id<-df_characters$id[df_characters$link==url]
-  df_myers_briggs <-rbind(df_myers_briggs,temp_data_mb)
-}
+#Collect myers-briggs match scores
+df_myers_briggs <- purrr::map2_dfr(df_characters$link, df_characters$id, function(url, id){
+  temp_data_mb <- get_mb(url)
+  temp_data_mb$char_id <- id
+  temp_data_mb
+})
 
 
 #clean up characters
