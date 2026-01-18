@@ -118,12 +118,8 @@ get_mb('https://openpsychometrics.org/tests/characters/stats/SUI/3')
 get_stats("https://openpsychometrics.org/tests/characters/stats/DH/6/")
 
 
-#Create for loop to collect characeters for all shows ----
-df_characters<-data.frame()
-for(id in df_universe$id){
-  temp_data_char <- get_characters(id)
-  df_characters<-rbind(df_characters,temp_data_char)
-}
+#Collect characeters for all shows ----
+df_characters <- purrr::map_dfr(df_universe$id, get_characters)
 
 
 #Create for loop to collect stats for all characters
